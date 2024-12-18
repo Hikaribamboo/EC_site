@@ -1,0 +1,20 @@
+<header>
+    <div class="logo">QUICKCART</div>
+    <div class="search-bar">
+        <input type="text" placeholder="検索...">
+        <button>🔍</button>
+    </div>
+    <nav>
+        {% if user.is_authenticated %}
+            <!-- ログイン後のヘッダーナビゲーション -->
+            <a href="{% url 'product_add' %}"><button>出品</button></a>
+            <a href="{% url 'mypage' %}"><button>マイページ</button></a>
+            <a href="{% url 'notifications' %}"><button>通知</button></a>
+            <a href="{% url 'logout' %}"><button>ログアウト</button></a>
+        {% else %}
+            <!-- ログイン前のヘッダーナビゲーション -->
+            <a href="{% url 'login' %}"><button>ログイン</button></a>
+            <a href="{% url 'register' %}"><button>新規登録</button></a>
+        {% endif %}
+    </nav>
+</header>

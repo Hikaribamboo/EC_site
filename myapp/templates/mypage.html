@@ -1,18 +1,31 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>マイページ</title>
+    <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
 </head>
 <body>
-    <h1>マイページ</h1>
-    <p>ようこそ、{{ user.username }} さん！</p>
-    <ul>
-        <li><a href="{% url 'product_add' %}">商品を出品する</a></li>
-        <li><a href="{% url 'notifications' %}">通知を確認する</a></li>
-        <li><a href="{% url 'logout' %}">ログアウト</a></li>
-    </ul>
-    <a href="{% url 'main' %}">メインページに戻る</a>
+    <!-- 共通ヘッダーを挿入 -->
+    {% include 'includes/header.html' %}
+
+    <!-- コンテンツ -->
+    <main>
+        <section class="info-section">
+            <h2>ポイント残高</h2>
+            <p>1,200ポイント</p>
+        </section>
+        <section class="buttons">
+            <button>購入履歴</button>
+            <button>販売履歴</button>
+            <a href="{% url 'product_add' %}"><button>出品</button></a>
+            <button>お気に入り商品</button>
+            <button>アカウント情報管理</button>
+        </section>
+    </main>
 </body>
 </html>
+

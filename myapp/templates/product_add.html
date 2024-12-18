@@ -1,19 +1,44 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>商品を出品</title>
+    <title>出品商品設定画面</title>
+    {% load static %}
+    
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/product_add.css' %}">
 </head>
 <body>
-    <h1>商品を出品</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <label>商品名: <input type="text" name="product_name"></label><br>
-        <label>価格: <input type="number" name="price"></label><br>
-        <label>商品画像: <input type="file" name="product_image"></label><br>
-        <button type="submit">出品する</button>
-    </form>
-    <a href="{% url 'main' %}">メインページに戻る</a>
+    <!-- 共通ヘッダーを挿入 -->
+    {% include 'includes/header.html' %}
+
+    <!-- 出品商品設定フォーム -->
+    <main>
+        <h2>出品商品設定</h2>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            <label>写真登録</label>
+            <input type="file" name="image" accept="image/*">
+
+            <label>商品名</label>
+            <input type="text" name="name" required>
+
+            <label>商品カテゴリ</label>
+            <input type="text" name="category" required>
+
+            <label>商品サイズ</label>
+            <input type="text" name="size">
+
+            <label>在庫数</label>
+            <input type="number" name="stock" required>
+
+            <label>販売価格</label>
+            <input type="number" name="price" required>
+
+            <button type="submit">出品情報確認</button>
+        </form>
+    </main>
 </body>
 </html>
