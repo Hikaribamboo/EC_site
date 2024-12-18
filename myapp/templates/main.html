@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QUICKCART</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+    <!-- ヘッダー -->
+    <header>
+        <div class="logo">QUICKCART</div>
+        <nav>
+            {% if user.is_authenticated %}
+                <!-- ログイン後 -->
+                <a href="{% url 'product_add' %}"><button>出品</button></a>
+                <a href="{% url 'mypage' %}"><button>マイページ</button></a>
+                <a href="{% url 'notifications' %}"><button>通知</button></a>
+                <a href="{% url 'logout' %}"><button>ログアウト</button></a>
+            {% else %}
+                <!-- ログイン前 -->
+                <a href="{% url 'login' %}"><button>ログイン</button></a>
+                <a href="{% url 'register' %}"><button>新規登録</button></a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <!-- メニュー -->
+    <nav class="menu">
+        <button class="menu-item active">おすすめ</button>
+        <button class="menu-item">ランキング</button>
+        <button class="menu-item">お気に入り</button>
+    </nav>
+
+    <!-- コンテンツ -->
+    <main>
+        {% if user.is_authenticated %}
+            <!-- ログイン後の表示 -->
+            <section class="welcome-message">
+                <h2>こんにちは、{{ user.username }} さん！</h2>
+                <p>検索履歴や閲覧履歴に基づいたおすすめ商品を表示します。</p>
+            </section>
+        {% else %}
+            <!-- ログイン前の表示 -->
+            <section class="product-list">
+                <h2>おすすめ商品</h2>
+                <div class="products">
+                    {% for product in products %}
+                    <div class="product">
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                        <h3>{{ product.name }}</h3>
+                        <p>¥{{ product.price }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+    </main>
+</body>
+</html>
+

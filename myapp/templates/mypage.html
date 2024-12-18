@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>マイページ</title>
+</head>
+<body>
+    <h1>マイページ</h1>
+    <p>ようこそ、{{ user.username }} さん！</p>
+    <ul>
+        <li><a href="{% url 'product_add' %}">商品を出品する</a></li>
+        <li><a href="{% url 'notifications' %}">通知を確認する</a></li>
+        <li><a href="{% url 'logout' %}">ログアウト</a></li>
+    </ul>
+    <a href="{% url 'main' %}">メインページに戻る</a>
+</body>
+</html>
