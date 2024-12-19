@@ -93,28 +93,34 @@ def product_list_user(request):
 
 @login_required
 def product_add(request):
-    if request.method == 'POST':
-        # フォームデータの取得
+    if request.method == "POST":
         name = request.POST.get('name')
+        price = request.POST.get('price')
         category = request.POST.get('category')
         size = request.POST.get('size')
         stock = request.POST.get('stock')
-        price = request.POST.get('price')
         image = request.FILES.get('image')
 
-        # 商品の保存
-        Product.objects.create(
+        # ログイン中のユーザーを出品者として登録
+        seller_id = request.user.id
+
+        # Product モデルに登録
+        product = Product(
             name=name,
-            category=category,
-            size=size,
-            stock=stock,
             price=price,
-            seller=request.user,
-            image=image,
+            stock=stock,
+            seller_id=seller_id,
+            image1=image,  # 最初の画像を使用
+            category=category,
+            size=size
         )
-        return redirect('mypage')  # 出品後にマイページにリダイレクト
+        product.save()
+
+        # 出品完了後にリダイレクト
+        return redirect('main')  # メインページへリダイレクト
 
     return render(request, 'product_add.html')
+
 
 def custom_login(request):
     if request.method == "POST":
@@ -178,31 +184,43 @@ def account_management(request):
     user = request.user
     return render(request, 'account_management.html', {'user': user})
 
-
 def product_confirm(request):
-    if request.method == 'POST':
-        # フォームデータを受け取る
+    if request.method == "POST":
         name = request.POST.get('name')
         price = request.POST.get('price')
-        image = request.FILES.get('image')
         category = request.POST.get('category')
         size = request.POST.get('size')
         stock = request.POST.get('stock')
+        image = request.FILES.get('image')
 
-        # 確認画面にデータを渡す
-        return render(request, 'product_confirm.html', {
+        if not (name and price and stock and image):
+            return render(request, 'product_add.html', {'error_message': 'すべての必須項目を入力してください。'})
+
+        # 画像をセッションに一時保存
+        request.session['temp_image'] = image.name
+        request.session['temp_data'] = {
             'name': name,
             'price': price,
-            'image': image,
             'category': category,
             'size': size,
             'stock': stock,
-        })
-    return redirect('product_add')  # 不正なアクセスの場合、入力画面に戻す
+        }
+
+        context = {
+            'name': name,
+            'price': price,
+            'category': category,
+            'size': size,
+            'stock': stock,
+            'image_url': f"/media/product_images/{image.name}",
+        }
+        return render(request, 'product_confirm.html', context)
+
+    return redirect('product_add')
+
 
 def product_add_confirmed(request):
     if request.method == 'POST':
-        # データベースに出品データを保存する処理
         name = request.POST.get('name')
         price = request.POST.get('price')
         category = request.POST.get('category')
@@ -210,14 +228,19 @@ def product_add_confirmed(request):
         stock = request.POST.get('stock')
         image = request.FILES.get('image')
 
-        # モデルに保存する処理（例）
+        # ログインしているユーザーのIDを出品者IDとして設定
+        seller_id = request.user.id
+
+        # モデルに保存
         Product.objects.create(
             name=name,
             price=price,
             category=category,
             size=size,
             stock=stock,
-            image=image,
+            image1=image,  # 第一画像を保存
+            seller_id=seller_id,
         )
         return redirect('main')  # メイン画面にリダイレクト
     return redirect('product_add')  # 不正なアクセスの場合
+

@@ -26,17 +26,15 @@ def generate_id_with_date(model, field_name, prefix, length):
     new_number = str(last_number + 1).zfill(length)  # ゼロ埋めして番号を作成
     return f"{prefix_with_date}-{new_number}"
 
-
 class Product(models.Model):
     product_id = models.CharField(max_length=20, unique=True, editable=False)
     name = models.CharField(max_length=100)
     price = models.PositiveIntegerField()
     stock = models.PositiveIntegerField()
     seller_id = models.IntegerField()
-
+    category = models.CharField(max_length=50, null=True, blank=True)
+    size = models.CharField(max_length=50, null=True, blank=True)
     image1 = models.ImageField(upload_to='product_images/', default='default_images/image_default.png')
-    image2 = models.ImageField(upload_to='product_images/', null=True, blank=True)
-    image3 = models.ImageField(upload_to='product_images/', null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if not self.product_id:
@@ -45,6 +43,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_id
+
 
 
 class Users(AbstractUser):

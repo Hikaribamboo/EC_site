@@ -39,5 +39,5 @@ class CustomUserAdmin(UserAdmin):
     readonly_fields = ('user_id',)  # ユーザーIDを編集不可に設定
 
 admin.site.register(Users, CustomUserAdmin)
-
+ 
 

@@ -27,14 +27,17 @@ urlpatterns = [
     path('notifications/', views.notifications, name='notifications'),  # 通知ページ
     path('product/add/', views.product_add, name='product_add'),  # 出品ページ
 
+    #マイページ関連
     path('selling_products/', views.selling_products, name='selling_products'),  # 出品中
     path('sold_products/', views.sold_products, name='sold_products'),  # 販売履歴
     path('purchase_history/', views.purchase_history, name='purchase_history'),  # 購入履歴
     path('account_management/', views.account_management, name='account_management'),  # アカウント管理
     path('favorite_products/', views.favorite_products, name='favorite_products'),  # お気に入り商品のURL
 
-    path('product/confirm/', views.product_confirm, name='product_confirm'),  # 確認画面用URL
-    path('product/add/confirmed/', views.product_add_confirmed, name='product_add_confirmed'),  # 出品確定用URL
+    #出品関連
+    path('product/add/', views.product_add, name='product_add'),
+    path('product/confirm/', views.product_confirm, name='product_confirm'),
+    path('product/add/confirmed/', views.product_add_confirmed, name='product_add_confirmed'),
 ]
 
 
