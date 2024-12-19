@@ -1,10 +1,10 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>マイページ</title>
+    {% load static %}
     <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
     <link rel="stylesheet" href="{% static 'css/header.css' %}">
 </head>
@@ -25,7 +25,13 @@
             <button>お気に入り商品</button>
             <button>アカウント情報管理</button>
         </section>
+        <section class="extra-links">
+            <ul>
+                <li><a href="{% url 'notifications' %}">通知を確認する</a></li>
+                <li><a href="{% url 'logout' %}">ログアウト</a></li>
+                <li><a href="{% url 'main' %}">メインページに戻る</a></li>
+            </ul>
+        </section>
     </main>
 </body>
 </html>
-

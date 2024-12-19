@@ -1,4 +1,3 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -19,26 +18,16 @@
         <h2>出品商品設定</h2>
         <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
-            <label>写真登録</label>
-            <input type="file" name="image" accept="image/*">
-
-            <label>商品名</label>
-            <input type="text" name="name" required>
-
-            <label>商品カテゴリ</label>
-            <input type="text" name="category" required>
-
-            <label>商品サイズ</label>
-            <input type="text" name="size">
-
-            <label>在庫数</label>
-            <input type="number" name="stock" required>
-
-            <label>販売価格</label>
-            <input type="number" name="price" required>
-
+            <label>商品名: <input type="text" name="name" required></label><br>
+            <label>価格: <input type="number" name="price" required></label><br>
+            <label>商品画像: <input type="file" name="image" accept="image/*"></label><br>
+            <label>商品カテゴリ: <input type="text" name="category" required></label><br>
+            <label>商品サイズ: <input type="text" name="size"></label><br>
+            <label>在庫数: <input type="number" name="stock" required></label><br>
             <button type="submit">出品情報確認</button>
         </form>
+        <a href="{% url 'main' %}">メインページに戻る</a>
     </main>
 </body>
 </html>
+

@@ -1,4 +1,3 @@
-#urls.py
 from django.urls import path
 from django.contrib.auth.views import LoginView  # LoginViewのインポート
 from . import views
@@ -14,8 +13,9 @@ urlpatterns = [
 
     # 一般ユーザー用
     path('products/', views.product_list_user, name='product_list_user'),  # 商品リスト
+    path('notifications/', views.notification_list, name='notification_list'),  # 通知リスト
     path('main/', views.main_page, name='main'),  # メイン画面
-    
+
     # ログイン用
     path('login/', views.custom_login, name='login'),  # ログイン画面
     path('logout/', views.custom_logout, name='logout'),  # ログアウト画面
@@ -23,6 +23,7 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('verify_qr/', views.verify_qr, name='verify_qr'),
 
+    # マイページと通知ページ
     path('mypage/', views.mypage, name='mypage'),  # マイページ
     path('notifications/', views.notifications, name='notifications'),  # 通知ページ
 ]
