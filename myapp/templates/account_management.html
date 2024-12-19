@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>アカウント情報管理</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/account_management.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+</head>
+<body>
+    <!-- 共通ヘッダーを挿入 -->
+    {% include 'includes/header.html' %}
+
+    <!-- コンテンツ -->
+    <main>
+        <h2>アカウント情報管理</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <label>アカウント名</label>
+            <input type="text" name="username" value="{{ user.username }}" required>
+
+            <label>メールアドレス</label>
+            <input type="email" name="email" value="{{ user.email }}" required>
+
+            <label>配送先住所</label>
+            <input type="text" name="address" value="{{ user.address }}" placeholder="例: 東京都渋谷区">
+
+            <label>電話番号</label>
+            <input type="tel" name="phone" value="{{ user.phone_number }}" placeholder="例: 09012345678">
+
+            <button type="submit">更新する</button>
+        </form>
+    </main>
+</body>
+</html>

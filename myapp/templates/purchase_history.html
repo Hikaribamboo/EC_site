@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>購入履歴</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/purchase_history.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+</head>
+<body>
+    <!-- 共通ヘッダーを挿入 -->
+    {% include 'includes/header.html' %}
+
+    <!-- コンテンツ -->
+    <main>
+        <h2>購入履歴</h2>
+        <section class="purchase-list">
+            {% for purchase in purchases %}
+            <div class="purchase-item">
+                <img src="{{ purchase.image_url }}" alt="{{ purchase.name }}">
+                <div class="purchase-info">
+                    <p>{{ purchase.name }}</p>
+                    <p>状態: {{ purchase.status }}</p>
+                    <a href="{% url 'purchase_detail' purchase.id %}">取引ページへ</a>
+                </div>
+            </div>
+            {% endfor %}
+        </section>
+    </main>
+</body>
+</html>

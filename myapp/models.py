@@ -49,13 +49,16 @@ class Product(models.Model):
 
 class Users(AbstractUser):
     user_id = models.CharField(max_length=20, unique=True, editable=False)
-    postal_code = models.IntegerField(null=True, blank=True)
+    postal_code = models.CharField(max_length=10, null=True, blank=True)  # 郵便番号を文字列型に変更
     address_prefecture = models.CharField(max_length=255, null=True, blank=True)
     address_city = models.CharField(max_length=255, null=True, blank=True)
     address_detail = models.CharField(max_length=255, null=True, blank=True)
     phone_number = models.BigIntegerField(null=True, blank=True)
     credit_card_number = models.BigIntegerField(null=True, blank=True)
     totp_secret = models.CharField(max_length=32, blank=True, null=True)
+
+    # 保有ポイント残高を追加
+    points_balance = models.PositiveIntegerField(default=1000)  
 
     def save(self, *args, **kwargs):
         if not self.user_id:
@@ -64,6 +67,7 @@ class Users(AbstractUser):
 
     def __str__(self):
         return self.username
+
 
 
 class Order(models.Model):

@@ -11,9 +11,11 @@ import base64
 
 User = get_user_model()  # カスタムユーザーモデルを取得
 
-# メイン画面
 def main_page(request):
-    return render(request, 'main.html')
+    registration_success = request.session.pop('registration_success', False)
+    return render(request, 'main.html', {
+        'registration_success': registration_success
+    })
 
 def admin_product_list(request):
     products = Product.objects.all()
@@ -60,7 +62,6 @@ def custom_logout(request):
 # セッションにシークレットキーを一時保存
 def register(request):
     if request.method == 'POST':
-        # すでにセッションに保存されている場合は再利用
         username = request.session.get('username')
         password = request.session.get('password')
         secret = request.session.get('totp_secret')
@@ -76,12 +77,20 @@ def register(request):
             # TOTP用シークレットキーを生成しセッションに保存
             secret = pyotp.random_base32()
             request.session['totp_secret'] = secret
+
+        # ユーザーを作成し、デフォルトポイントを設定
+        User = get_user_model()
+        user = User.objects.create_user(
+            username=username,
+            password=password,
+            totp_secret=secret,
+            points_balance=1000  # デフォルトで 1000 ポイント
+        )
         
         # デバッグ用出力
-        print("Username:", request.session.get('username'))  # ユーザー名
-        print("Password:", request.session.get('password'))  # パスワード
-        print("TOTP Secret:", request.session.get('totp_secret'))  # シークレットキー
-
+        print("Username:", username)
+        print("Password:", password)
+        print("TOTP Secret:", secret)
 
         # 有効期限を1分（60秒）に設定
         totp = pyotp.TOTP(secret, interval=60)
@@ -94,6 +103,9 @@ def register(request):
         buffer = BytesIO()
         qr_image.save(buffer, format="PNG")
         qr_code_base64 = base64.b64encode(buffer.getvalue()).decode()
+
+        # 登録成功モーダル表示用フラグをセッションに保存
+        request.session['registration_success'] = True
 
         return render(request, 'register.html', {
             'qr_code_url': f"data:image/png;base64,{qr_code_base64}",

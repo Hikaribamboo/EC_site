@@ -21,6 +21,17 @@
 
     <!-- コンテンツ -->
     <main>
+        <!-- モーダル -->
+        {% if user.is_authenticated and registration_success %}
+        <div class="modal" id="welcome-modal">
+            <div class="modal-content">
+                <h2>登録完了！</h2>
+                <p>新規登録ありがとうございます！1000ポイントをプレゼントしました。</p>
+                <button id="close-modal">閉じる</button>
+            </div>
+        </div>
+        {% endif %}
+
         {% if user.is_authenticated %}
             <!-- ログイン後の表示 -->
             <section class="welcome-message">
@@ -43,6 +54,10 @@
             </section>
         {% endif %}
     </main>
+
+    <!-- モーダル用のスクリプト -->
+    <script src="{% static 'js/modal.js' %}"></script>
 </body>
 </html>
+
 
