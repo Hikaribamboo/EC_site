@@ -9,6 +9,7 @@ from io import BytesIO
 import base64
 
 
+
 User = get_user_model()  # カスタムユーザーモデルを取得
 
 def main_page(request):
@@ -16,6 +17,7 @@ def main_page(request):
     return render(request, 'main.html', {
         'registration_success': registration_success
     })
+
 
 def admin_product_list(request):
     products = Product.objects.all()
@@ -55,57 +57,39 @@ def custom_login(request):
             return render(request, 'login.html', {'error': 'Invalid username or password.'})
     return render(request, 'login.html')
 
+from django.contrib.auth import logout
+
+
 def custom_logout(request):
     logout(request)
-    return redirect('login')  # ログアウト後、ログイン画面へリダイレクト
+    print(f"ログアウト後のユーザー: {request.user}")  # AnonymousUser であるべき
+    return redirect('main')
 
 # セッションにシークレットキーを一時保存
 def register(request):
     if request.method == 'POST':
-        username = request.session.get('username')
-        password = request.session.get('password')
-        secret = request.session.get('totp_secret')
+        username = request.POST.get('username')
+        password = request.POST.get('password')
 
-        if not (username and password and secret):  # 初回の場合
-            username = request.POST.get('username')
-            password = request.POST.get('password')
+        # シークレットキー生成
+        secret = pyotp.random_base32()
 
-            # セッションにユーザー情報を保存
-            request.session['username'] = username
-            request.session['password'] = password
-
-            # TOTP用シークレットキーを生成しセッションに保存
-            secret = pyotp.random_base32()
-            request.session['totp_secret'] = secret
-
-        # ユーザーを作成し、デフォルトポイントを設定
-        User = get_user_model()
-        user = User.objects.create_user(
-            username=username,
-            password=password,
-            totp_secret=secret,
-            points_balance=1000  # デフォルトで 1000 ポイント
+        # TOTPのプロビジョニングURIを作成
+        totp = pyotp.TOTP(secret)
+        qr_code_data = totp.provisioning_uri(
+            name=username,
+            issuer_name="QUICKCART"  # サイト名をここで指定
         )
-        
-        # デバッグ用出力
-        print("Username:", username)
-        print("Password:", password)
-        print("TOTP Secret:", secret)
-
-        # 有効期限を1分（60秒）に設定
-        totp = pyotp.TOTP(secret, interval=60)
 
         # QRコードを生成
-        qr_code_data = totp.provisioning_uri(name=username, issuer_name="ECサイト")
         qr_image = qrcode.make(qr_code_data)
 
-        # 画像をBase64に変換
+        # QRコードをBase64エンコードしてテンプレートに渡す
         buffer = BytesIO()
         qr_image.save(buffer, format="PNG")
         qr_code_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-        # 登録成功モーダル表示用フラグをセッションに保存
-        request.session['registration_success'] = True
+        # ユーザー情報やシークレットを保存する処理をここに追加
 
         return render(request, 'register.html', {
             'qr_code_url': f"data:image/png;base64,{qr_code_base64}",

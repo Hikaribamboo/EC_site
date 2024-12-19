@@ -53,11 +53,13 @@
                 </div>
             </section>
         {% endif %}
+        
+        <p>ユーザー認証状態: {% if user.is_authenticated %}ログイン中{% else %}ログアウト中{% endif %}</p>
     </main>
 
     <!-- モーダル用のスクリプト -->
-    <script src="{% static 'js/modal.js' %}"></script>
+    <script src="{% static 'js/model.js' %}"></script>
+    
 </body>
 </html>
-
 
