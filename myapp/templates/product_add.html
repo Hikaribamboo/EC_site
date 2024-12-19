@@ -16,7 +16,13 @@
     <!-- 出品商品設定フォーム -->
     <main>
         <h2>出品商品設定</h2>
-        <form method="POST" enctype="multipart/form-data">
+
+        <!-- エラーメッセージ表示 -->
+        {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+        {% endif %}
+
+        <form method="POST" action="{% url 'product_confirm' %}" enctype="multipart/form-data">
             {% csrf_token %}
             <label>商品名: <input type="text" name="name" required></label><br>
             <label>価格: <input type="number" name="price" required></label><br>
@@ -26,8 +32,10 @@
             <label>在庫数: <input type="number" name="stock" required></label><br>
             <button type="submit">出品情報確認</button>
         </form>
+
         <a href="{% url 'main' %}">メインページに戻る</a>
     </main>
 </body>
 </html>
+
 

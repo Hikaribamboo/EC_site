@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>出品情報確認</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+</head>
+<body>
+    <!-- 共通ヘッダーを挿入 -->
+    {% include 'includes/header.html' %}
+
+    <main>
+        <h2>出品情報確認</h2>
+        <p>以下の内容で出品します。よろしいですか？</p>
+
+        <ul>
+            <li>商品名: {{ name }}</li>
+            <li>価格: ¥{{ price }}</li>
+            <li>カテゴリ: {{ category }}</li>
+            <li>サイズ: {{ size }}</li>
+            <li>在庫数: {{ stock }}</li>
+            {% if image %}
+            <li>画像: <img src="{{ image.url }}" alt="商品画像" style="max-width: 200px;"></li>
+            {% else %}
+            <li>画像: なし</li>
+            {% endif %}
+        </ul>
+
+        <form method="POST" action="{% url 'product_add_confirmed' %}">
+            {% csrf_token %}
+            <input type="hidden" name="name" value="{{ name }}">
+            <input type="hidden" name="price" value="{{ price }}">
+            <input type="hidden" name="category" value="{{ category }}">
+            <input type="hidden" name="size" value="{{ size }}">
+            <input type="hidden" name="stock" value="{{ stock }}">
+            <button type="submit">確定する</button>
+        </form>
+        <a href="{% url 'product_add' %}"><button>戻る</button></a>
+    </main>
+</body>
+</html>

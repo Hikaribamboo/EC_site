@@ -48,26 +48,37 @@ class Product(models.Model):
 
 
 class Users(AbstractUser):
+    """
+    カスタムユーザーモデル
+    """
+    # 自動生成されるユーザーID (例: 1219-0011)
     user_id = models.CharField(max_length=20, unique=True, editable=False)
-    postal_code = models.CharField(max_length=10, null=True, blank=True)  # 郵便番号を文字列型に変更
-    address_prefecture = models.CharField(max_length=255, null=True, blank=True)
-    address_city = models.CharField(max_length=255, null=True, blank=True)
-    address_detail = models.CharField(max_length=255, null=True, blank=True)
-    phone_number = models.BigIntegerField(null=True, blank=True)
-    credit_card_number = models.BigIntegerField(null=True, blank=True)
-    totp_secret = models.CharField(max_length=32, blank=True, null=True)
 
-    # 保有ポイント残高を追加
-    points_balance = models.PositiveIntegerField(default=1000)  
+    # 他のユーザー情報
+    postal_code = models.CharField(max_length=10, null=True, blank=True)  # 郵便番号
+    address_prefecture = models.CharField(max_length=255, null=True, blank=True)  # 都道府県
+    address_city = models.CharField(max_length=255, null=True, blank=True)  # 市町村
+    address_detail = models.CharField(max_length=255, null=True, blank=True)  # 詳細住所
+    phone_number = models.BigIntegerField(null=True, blank=True)  # 電話番号
+    credit_card_number = models.BigIntegerField(null=True, blank=True)  # クレジットカード番号
+    totp_secret = models.CharField(max_length=32, blank=True, null=True)  # TOTP秘密鍵
+
+    # 保有ポイント残高（デフォルトで1000ポイント）
+    points_balance = models.PositiveIntegerField(default=1000)
 
     def save(self, *args, **kwargs):
-        if not self.user_id:
-            self.user_id = generate_id_with_date(Users, 'user_id', 'USR', 4)
+        """
+        初回保存時に `user_id` を自動生成。
+        """
+        if not self.user_id:  # まだ `user_id` が設定されていない場合
+            self.user_id = generate_id_with_date(Users, 'user_id', '', 4)
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return self.username
-
+        """
+        表示用文字列
+        """
+        return f"{self.user_id} ({self.username})"
 
 
 class Order(models.Model):

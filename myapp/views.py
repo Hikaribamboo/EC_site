@@ -2,15 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from .models import Product, Notification, Users
-import pyotp
-import qrcode
-from io import BytesIO
-import base64
+from .models import Product, Notification
 
-
-
-User = get_user_model()  # カスタムユーザーモデルを取得
+User = get_user_model()
 
 def main_page(request):
     registration_success = request.session.pop('registration_success', False)
@@ -18,54 +12,7 @@ def main_page(request):
         'registration_success': registration_success
     })
 
-
-def admin_product_list(request):
-    products = Product.objects.all()
-    return render(request, 'myapp/admin_product_list.html', {'products': products})
-
-def delete_product(request, product_id):
-    # 削除対象の商品を取得
-    product = get_object_or_404(Product, product_id=product_id)
-    product.delete()  # 商品を削除
-    return redirect('admin_product_list')  # 管理者用商品リストにリダイレクト
-
-def product_list_user(request):
-    products = Product.objects.filter(stock__gt=0)  # 在庫がある商品のみ表示
-    return render(request, 'myapp/product_list_user.html', {'products': products})
-
-@login_required
-def notification_list(request):
-    """
-    ログイン中のユーザーに関連する通知を取得し、通知一覧画面を表示するビュー
-    """
-    # ログイン中のユーザーの通知を取得
-    notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
-
-    # コンテキストに通知データを渡してテンプレートをレンダリング
-    return render(request, 'notification_list.html', {'notifications': notifications})
-
-def custom_login(request):
-    if request.method == "POST":
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            return redirect('main')  # ログイン成功後にメイン画面へ
-        else:
-            return render(request, 'login.html', {'error': 'Invalid username or password.'})
-    return render(request, 'login.html')
-
-from django.contrib.auth import logout
-
-
-def custom_logout(request):
-    logout(request)
-    print(f"ログアウト後のユーザー: {request.user}")  # AnonymousUser であるべき
-    return redirect('main')
-
-# セッションにシークレットキーを一時保存
+    # セッションにシークレットキーを一時保存
 def register(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -125,13 +72,152 @@ def verify_qr(request):
     return redirect('register')
 
 
+@login_required
+def admin_product_list(request):
+    products = Product.objects.all()
+    return render(request, 'myapp/admin_product_list.html', {'products': products})
+
+
+@login_required
+def delete_product(request, product_id):
+    product = get_object_or_404(Product, product_id=product_id)
+    product.delete()
+    return redirect('admin_product_list')
+
+
+@login_required
+def product_list_user(request):
+    products = Product.objects.filter(stock__gt=0)
+    return render(request, 'myapp/product_list_user.html', {'products': products})
+
+
+@login_required
 def product_add(request):
-    return render(request, 'product_add.html')  # 出品ページのテンプレートを作成
+    if request.method == 'POST':
+        # フォームデータの取得
+        name = request.POST.get('name')
+        category = request.POST.get('category')
+        size = request.POST.get('size')
+        stock = request.POST.get('stock')
+        price = request.POST.get('price')
+        image = request.FILES.get('image')
 
+        # 商品の保存
+        Product.objects.create(
+            name=name,
+            category=category,
+            size=size,
+            stock=stock,
+            price=price,
+            seller=request.user,
+            image=image,
+        )
+        return redirect('mypage')  # 出品後にマイページにリダイレクト
+
+    return render(request, 'product_add.html')
+
+def custom_login(request):
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('main')
+        else:
+            return render(request, 'login.html', {'error': 'Invalid username or password.'})
+    return render(request, 'login.html')
+
+
+def custom_logout(request):
+    logout(request)
+    return redirect('main')
+
+
+@login_required
 def mypage(request):
-    return render(request, 'mypage.html')  # マイページのテンプレートを作成
+    return render(request, 'mypage.html')
 
+
+@login_required
 def notifications(request):
-    return render(request, 'notifications.html')  # 通知ページのテンプレートを作成
+    notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
+    return render(request, 'notifications.html', {'notifications': notifications})
 
 
+@login_required
+def selling_products(request):
+    selling_products = Product.objects.filter(seller=request.user, is_sold=False)
+    return render(request, 'selling.html', {'selling_products': selling_products})
+
+
+@login_required
+def sold_products(request):
+    sold_products = Product.objects.filter(seller=request.user, is_sold=True)
+    return render(request, 'sold.html', {'sold_products': sold_products})
+
+
+@login_required
+def favorite_products(request):
+    favorite_products = Product.objects.filter(favorites=request.user)
+    return render(request, 'favorite_products.html', {'favorite_products': favorite_products})
+
+
+@login_required
+def purchase_history(request):
+    purchases = [
+        {"name": "商品C", "price": 1500, "date": "2024-12-18"},
+        {"name": "商品D", "price": 3000, "date": "2024-12-17"},
+    ]
+    return render(request, 'purchase_history.html', {'purchases': purchases})
+
+
+@login_required
+def account_management(request):
+    user = request.user
+    return render(request, 'account_management.html', {'user': user})
+
+
+def product_confirm(request):
+    if request.method == 'POST':
+        # フォームデータを受け取る
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        image = request.FILES.get('image')
+        category = request.POST.get('category')
+        size = request.POST.get('size')
+        stock = request.POST.get('stock')
+
+        # 確認画面にデータを渡す
+        return render(request, 'product_confirm.html', {
+            'name': name,
+            'price': price,
+            'image': image,
+            'category': category,
+            'size': size,
+            'stock': stock,
+        })
+    return redirect('product_add')  # 不正なアクセスの場合、入力画面に戻す
+
+def product_add_confirmed(request):
+    if request.method == 'POST':
+        # データベースに出品データを保存する処理
+        name = request.POST.get('name')
+        price = request.POST.get('price')
+        category = request.POST.get('category')
+        size = request.POST.get('size')
+        stock = request.POST.get('stock')
+        image = request.FILES.get('image')
+
+        # モデルに保存する処理（例）
+        Product.objects.create(
+            name=name,
+            price=price,
+            category=category,
+            size=size,
+            stock=stock,
+            image=image,
+        )
+        return redirect('main')  # メイン画面にリダイレクト
+    return redirect('product_add')  # 不正なアクセスの場合

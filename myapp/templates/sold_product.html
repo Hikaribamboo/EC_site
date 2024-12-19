@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>販売履歴</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+</head>
+<body>
+    <!-- 共通ヘッダーを挿入 -->
+    {% include 'includes/header.html' %}
+
+    <main>
+        <h2>販売履歴</h2>
+        {% if sold_products %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>商品名</th>
+                        <th>価格</th>
+                        <th>販売日時</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in sold_products %}
+                    <tr>
+                        <td>{{ product.name }}</td>
+                        <td>¥{{ product.price }}</td>
+                        <td>{{ product.sold_at|date:"Y-m-d H:i" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>販売履歴はありません。</p>
+        {% endif %}
+    </main>
+</body>
+</html>

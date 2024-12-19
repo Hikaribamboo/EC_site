@@ -20,12 +20,13 @@
         </section>
         
         <section class="buttons">
-            <button>購入履歴</button>
-            <button>販売履歴</button>
-            <a href="{% url 'product_add' %}"><button>出品</button></a>
-            <button>お気に入り商品</button>
-            <button>アカウント情報管理</button>
+            <a href="{% url 'purchase_history' %}"><button>購入履歴</button></a>
+            <a href="{% url 'sold_products' %}"><button>販売履歴</button></a>
+            <a href="{% url 'selling_products' %}"><button>出品中の商品</button></a>
+            <a href="{% url 'favorite_products' %}"><button>お気に入り商品</button></a>
+            <a href="{% url 'account_management' %}"><button>アカウント情報管理</button></a>
         </section>
+        
         <section class="extra-links">
             <ul>
                 <li><a href="{% url 'notifications' %}">通知を確認する</a></li>
