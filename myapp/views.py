@@ -218,7 +218,6 @@ def product_confirm(request):
 
     return redirect('product_add')
 
-
 def product_add_confirmed(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -226,21 +225,25 @@ def product_add_confirmed(request):
         category = request.POST.get('category')
         size = request.POST.get('size')
         stock = request.POST.get('stock')
-        image = request.FILES.get('image')
+        image = request.session.get('temp_image')  # セッションから画像データを取得
 
-        # ログインしているユーザーのIDを出品者IDとして設定
         seller_id = request.user.id
 
-        # モデルに保存
         Product.objects.create(
             name=name,
             price=price,
             category=category,
             size=size,
             stock=stock,
-            image1=image,  # 第一画像を保存
-            seller_id=seller_id,
+            image1=image,  # セッションから取得した画像を保存
+            seller_id=seller_id
         )
-        return redirect('main')  # メイン画面にリダイレクト
-    return redirect('product_add')  # 不正なアクセスの場合
+
+        # セッションから一時データを削除
+        request.session.pop('temp_image', None)
+        request.session.pop('temp_data', None)
+
+        return redirect('main')
+    return redirect('product_add')
+
 

@@ -22,10 +22,11 @@
             <li>サイズ: {{ size }}</li>
             <li>在庫数: {{ stock }}</li>
             {% if image %}
-            <li>画像: <img src="{{ image.url }}" alt="商品画像" style="max-width: 200px;"></li>
-            {% else %}
-            <li>画像: なし</li>
-            {% endif %}
+<li>画像: <img src="/media/temp_images/{{ image }}" alt="商品画像" style="max-width: 200px;"></li>
+{% else %}
+<li>画像: なし</li>
+{% endif %}
+
         </ul>
 
         <form method="POST" action="{% url 'product_add_confirmed' %}">
@@ -37,7 +38,7 @@
             <input type="hidden" name="stock" value="{{ stock }}">
             <button type="submit">確定する</button>
         </form>
-        <a href="{% url 'product_add' %}"><button>戻る</button></a>
+        <a href="{% url 'product_add' %}" class="button">戻る</a>
     </main>
 </body>
 </html>
