@@ -159,9 +159,12 @@ def notifications(request):
 @login_required
 def selling_products(request):
     selling_products = Product.objects.filter(seller_id=request.user.id, is_sold=False)
-    return render(request, 'selling.html', {'selling_products': selling_products})
+    return render(request, 'selling_products.html', {'selling_products': selling_products})
 
-
+@login_required
+def selling_detail(request, product_id):
+    product = get_object_or_404(Product, product_id=product_id, seller_id=request.user.id)
+    return render(request, 'selling_detail.html', {'product': product})
 @login_required
 def sold_products(request):
     sold_products = Product.objects.filter(seller=request.user, is_sold=True)

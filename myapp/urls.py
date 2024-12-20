@@ -29,6 +29,9 @@ urlpatterns = [
 
     #マイページ関連
     path('selling_products/', views.selling_products, name='selling_products'),  # 出品中
+    path('selling_products/<str:product_id>/', views.selling_detail, name='selling_detail'),
+
+
     path('sold_products/', views.sold_products, name='sold_products'),  # 販売履歴
     path('purchase_history/', views.purchase_history, name='purchase_history'),  # 購入履歴
     path('account_management/', views.account_management, name='account_management'),  # アカウント管理

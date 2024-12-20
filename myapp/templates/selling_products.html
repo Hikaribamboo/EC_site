@@ -23,6 +23,7 @@
                     <p>{{ product.name }}</p>
                     <p>在庫数: {{ product.stock }}</p>
                     <a href="{% url 'selling_detail' product.product_id %}">取引ページへ</a>
+
                 </div>
             </div>
             {% endfor %}

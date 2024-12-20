@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>商品詳細</title>
+</head>
+<body>
+    <h2>商品詳細</h2>
+    <p>商品名: {{ product.name }}</p>
+    <p>価格: ¥{{ product.price }}</p>
+    <p>在庫数: {{ product.stock }}</p>
+    <p>カテゴリ: {{ product.category }}</p>
+    <p>サイズ: {{ product.size }}</p>
+    <img src="{{ product.image1.url }}" alt="{{ product.name }}">
+    <a href="{% url 'selling_products' %}">出品中の商品一覧に戻る</a>
+</body>
+</html>
