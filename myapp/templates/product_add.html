@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>出品商品設定画面</title>
     {% load static %}
-    
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
     <link rel="stylesheet" href="{% static 'css/product_add.css' %}">
 </head>
 <body>
@@ -21,17 +20,18 @@
         {% if error_message %}
         <p style="color: red;">{{ error_message }}</p>
         {% endif %}
-
-        <form method="POST" action="{% url 'product_confirm' %}" enctype="multipart/form-data">
-            {% csrf_token %}
-            <label>商品名: <input type="text" name="name" required></label><br>
-            <label>価格: <input type="number" name="price" required></label><br>
-            <label>商品画像: <input type="file" name="image" accept="image/*"></label><br>
-            <label>商品カテゴリ: <input type="text" name="category" required></label><br>
-            <label>商品サイズ: <input type="text" name="size"></label><br>
-            <label>在庫数: <input type="number" name="stock" required></label><br>
-            <button type="submit">出品情報確認</button>
-        </form>
+        <div class="list-contents">
+            <form method="POST" action="{% url 'product_confirm' %}" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label>商品名: <input type="text" name="name" required></label><br>
+                <label>価格: <input type="number" name="price" required></label><br>
+                <label>商品画像: <input type="file" name="image" accept="image/*"></label><br>
+                <label>商品カテゴリ: <input type="text" name="category" required></label><br>
+                <label>商品サイズ: <input type="text" name="size"></label><br>
+                <label>在庫数: <input type="number" name="stock" required></label><br>
+                <button type="submit" calss="button-nomal">出品情報確認</button>
+            </form>
+        </div>
 
         <a href="{% url 'main' %}">メインページに戻る</a>
     </main>

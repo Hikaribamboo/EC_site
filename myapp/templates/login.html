@@ -4,8 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <title>ログイン</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
 </head>
 <body>
+    <!-- 共通ヘッダーを挿入 -->
+    {% include 'includes/header.html' %}
+
     <h1>ログイン</h1>
     {% if error %}
         <p style="color: red;">{{ error }}</p>
@@ -18,7 +24,7 @@
         <label for="password">パスワード:</label>
         <input type="password" id="password" name="password" required>
         <br>
-        <button type="submit">ログイン</button>
+        <button type="submit" calss="button-nomal">ログイン</button>
     </form>
 </body>
 </html>

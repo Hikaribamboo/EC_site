@@ -6,7 +6,7 @@
     <title>購入履歴</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/purchase_history.css' %}">
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
 </head>
 <body>
     <!-- 共通ヘッダーを挿入 -->
@@ -16,16 +16,18 @@
     <main>
         <h2>購入履歴</h2>
         <section class="purchase-list">
-            {% for purchase in purchases %}
-            <div class="purchase-item">
-                <img src="{{ purchase.image_url }}" alt="{{ purchase.name }}">
-                <div class="purchase-info">
-                    <p>{{ purchase.name }}</p>
-                    <p>状態: {{ purchase.status }}</p>
-                    <a href="{% url 'purchase_detail' purchase.id %}">取引ページへ</a>
+            <div class="list-contents">
+                {% for purchase in purchases %}
+                <div class="purchase-item">
+                    <img src="{{ purchase.image_url }}" alt="{{ purchase.name }}">
+                    <div class="purchase-info">
+                        <p>{{ purchase.name }}</p>
+                        <p>状態: {{ purchase.status }}</p>
+                        <a href="{% url 'purchase_detail' purchase.id %}">取引ページへ</a>
+                    </div>
                 </div>
+                {% endfor %}
             </div>
-            {% endfor %}
         </section>
     </main>
 </body>

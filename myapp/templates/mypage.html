@@ -6,7 +6,7 @@
     <title>マイページ</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/mypage.css' %}">
-    <link rel="stylesheet" href="{% static 'css/header.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common.css' %}">
 </head>
 <body>
     <!-- 共通ヘッダーを挿入 -->
@@ -20,20 +20,16 @@
         </section>
         
         <section class="buttons">
-            <a href="{% url 'purchase_history' %}"><button>購入履歴</button></a>
-            <a href="{% url 'sold_products' %}"><button>販売履歴</button></a>
-            <a href="{% url 'selling_products' %}"><button>出品中の商品</button></a>
-            <a href="{% url 'favorite_products' %}"><button>お気に入り商品</button></a>
-            <a href="{% url 'account_management' %}"><button>アカウント情報管理</button></a>
+            <div class="list-contents">
+                <a href="{% url 'purchase_history' %}"><button class="mypage-button">購入履歴</button></a>
+                <a href="{% url 'sold_products' %}"><button class="mypage-button">販売履歴</button></a>
+                <a href="{% url 'selling_products' %}"><button class="mypage-button">出品中の商品</button></a>
+                <a href="{% url 'favorite_products' %}"><button class="mypage-button">お気に入り商品</button></a>
+                <a href="{% url 'account_management' %}"><button class="mypage-button">アカウント情報管理</button></a>
+            </div>
         </section>
         
-        <section class="extra-links">
-            <ul>
-                <li><a href="{% url 'notifications' %}">通知を確認する</a></li>
-                <li><a href="{% url 'logout' %}">ログアウト</a></li>
-                <li><a href="{% url 'main' %}">メインページに戻る</a></li>
-            </ul>
-        </section>
+        
     </main>
 </body>
 </html>
