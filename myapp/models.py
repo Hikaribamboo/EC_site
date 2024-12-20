@@ -32,9 +32,10 @@ class Product(models.Model):
     price = models.PositiveIntegerField()
     stock = models.PositiveIntegerField()
     seller_id = models.IntegerField()
-    category = models.CharField(max_length=50, null=True, blank=True)
+    category = models.CharField(max_length=100, null=True, blank=True)
     size = models.CharField(max_length=50, null=True, blank=True)
     image1 = models.ImageField(upload_to='product_images/', default='default_images/image_default.png')
+    is_sold = models.BooleanField(default=False)  # 新しいフィールド
 
     def save(self, *args, **kwargs):
         if not self.product_id:
@@ -43,6 +44,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_id
+
 
 
 

@@ -18,15 +18,16 @@
         <section class="selling-list">
             {% for product in selling_products %}
             <div class="selling-item">
-                <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                <img src="{{ product.image1.url }}" alt="{{ product.name }}">
                 <div class="selling-info">
                     <p>{{ product.name }}</p>
-                    <p>状態: {{ product.status }}</p>
-                    <a href="{% url 'selling_detail' product.id %}">取引ページへ</a>
+                    <p>在庫数: {{ product.stock }}</p>
+                    <a href="{% url 'selling_detail' product.product_id %}">取引ページへ</a>
                 </div>
             </div>
             {% endfor %}
         </section>
+        
     </main>
 </body>
 </html>

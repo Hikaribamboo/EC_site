@@ -2,7 +2,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import get_user_model, login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from django.conf import settings
-from .models import Product, Notification
+from .models import Product, Notification, Users
+import pyotp
+import qrcode
+from io import BytesIO
+import base64
+
 
 User = get_user_model()
 
@@ -151,10 +156,9 @@ def notifications(request):
     notifications = Notification.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'notifications.html', {'notifications': notifications})
 
-
 @login_required
 def selling_products(request):
-    selling_products = Product.objects.filter(seller=request.user, is_sold=False)
+    selling_products = Product.objects.filter(seller_id=request.user.id, is_sold=False)
     return render(request, 'selling.html', {'selling_products': selling_products})
 
 
