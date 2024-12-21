@@ -7,7 +7,7 @@ import pyotp
 import qrcode
 from io import BytesIO
 import base64
-
+import sys
 
 User = get_user_model()
 
@@ -19,12 +19,15 @@ def main_page(request):
 
     # セッションにシークレットキーを一時保存
 def register(request):
+    print("register called", file=sys.stderr)  # エラーストリームに出力
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
 
         # シークレットキー生成
         secret = pyotp.random_base32()
+        request.session['totp_secret'] = secret  # セッションに保存
+        print(f"Saved totp_secret in session: {secret}")  # デバッグ用
 
         # TOTPのプロビジョニングURIを作成
         totp = pyotp.TOTP(secret)
@@ -41,15 +44,15 @@ def register(request):
         qr_image.save(buffer, format="PNG")
         qr_code_base64 = base64.b64encode(buffer.getvalue()).decode()
 
-        # ユーザー情報やシークレットを保存する処理をここに追加
-
         return render(request, 'register.html', {
             'qr_code_url': f"data:image/png;base64,{qr_code_base64}",
         })
 
     return render(request, 'register.html')
 
+
 def verify_qr(request):
+    print(request.session.get('totp_secret'))  # セッションの内容を確認
     if request.method == 'POST':
         otp = request.POST.get('otp')
         secret = request.session.get('totp_secret')

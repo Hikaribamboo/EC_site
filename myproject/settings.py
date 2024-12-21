@@ -144,7 +144,8 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 
 AUTH_USER_MODEL = 'myapp.Users'
 
-SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False
+
 CACHE_MIDDLEWARE_SECONDS = 0
 
 SESSION_ENGINE = 'django.contrib.sessions.backends.db'
