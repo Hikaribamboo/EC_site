@@ -8,6 +8,7 @@ import qrcode
 from io import BytesIO
 import base64
 import sys
+from django.contrib import messages  # メッセージ表示用
 
 User = get_user_model()
 
@@ -18,31 +19,50 @@ def main_page(request):
     })
 
     # セッションにシークレットキーを一時保存
+# セッションにシークレットキーを一時保存
 def register(request):
-    print("register called", file=sys.stderr)  # エラーストリームに出力
     if request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
+        username = request.session.get('username')
+        password = request.session.get('password')
+        secret = request.session.get('totp_secret')
 
-        # シークレットキー生成
-        secret = pyotp.random_base32()
-        request.session['totp_secret'] = secret  # セッションに保存
-        print(f"Saved totp_secret in session: {secret}")  # デバッグ用
+        if not (username and password and secret):  # 初回の場合
+            username = request.POST.get('username')
+            password = request.POST.get('password')
 
-        # TOTPのプロビジョニングURIを作成
-        totp = pyotp.TOTP(secret)
-        qr_code_data = totp.provisioning_uri(
-            name=username,
-            issuer_name="QUICKCART"  # サイト名をここで指定
-        )
+            # セッションにユーザー情報を保存
+            request.session['username'] = username
+            request.session['password'] = password
+
+            # ユーザー名の重複チェック
+            User = get_user_model()
+            if User.objects.filter(username=username).exists():
+                messages.error(request, 'このユーザー名は既に登録されています。別の名前をお試しください。')
+                return render(request, 'register.html')
+
+            # TOTP用シークレットキーを生成しセッションに保存
+            secret = pyotp.random_base32()
+            request.session['totp_secret'] = secret
+
+        # デバッグ用出力
+        print("Username:", username)
+        print("Password:", password)
+        print("TOTP Secret:", secret)
+
+        # 有効期限を1分（60秒）に設定
+        totp = pyotp.TOTP(secret, interval=60)
 
         # QRコードを生成
+        qr_code_data = totp.provisioning_uri(name=username, issuer_name="ECサイト")
         qr_image = qrcode.make(qr_code_data)
 
-        # QRコードをBase64エンコードしてテンプレートに渡す
+        # 画像をBase64に変換
         buffer = BytesIO()
         qr_image.save(buffer, format="PNG")
         qr_code_base64 = base64.b64encode(buffer.getvalue()).decode()
+
+        # 登録成功モーダル表示用フラグをセッションに保存
+        request.session['registration_success'] = True
 
         return render(request, 'register.html', {
             'qr_code_url': f"data:image/png;base64,{qr_code_base64}",
@@ -50,9 +70,7 @@ def register(request):
 
     return render(request, 'register.html')
 
-
 def verify_qr(request):
-    print(request.session.get('totp_secret'))  # セッションの内容を確認
     if request.method == 'POST':
         otp = request.POST.get('otp')
         secret = request.session.get('totp_secret')
@@ -65,6 +83,14 @@ def verify_qr(request):
             # ユーザー登録処理
             username = request.session.get('username')
             password = request.session.get('password')
+
+            # ユーザー名の重複チェック
+            User = get_user_model()
+            if User.objects.filter(username=username).exists():
+                return render(request, 'register.html', {
+                    'error': 'このユーザー名は既に登録されています。別の名前をお試しください。',
+                })
+
             user = User.objects.create_user(username=username, password=password)
             login(request, user)
 
