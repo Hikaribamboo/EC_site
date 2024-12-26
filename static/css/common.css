@@ -186,7 +186,7 @@ body {
     display: none;
 }
 
-/* カラーバリエーション */
+/* カラーバリエーションの例 */
 .button-primary {
     --button-bg: #007bff;
     --button-text: #fff;

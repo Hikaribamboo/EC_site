@@ -21,44 +21,44 @@
                 <div class="info-item" id="username-row">
                     <span>アカウント名:</span>
                     <span id="username-display">{{ user.username }}</span>
-                    <button calss="button-nomal" onclick="toggleEdit('username')">編集</button>
+                    <button class="button-nomal" onclick="toggleEdit('username')">編集</button>
                     <form id="username-form" method="POST" style="display: none;">
                         {% csrf_token %}
                         <input type="text" name="username" value="{{ user.username }}">
-                        <button type="submit" calss="button-nomal">保存</button>
+                        <button type="submit" class="button-nomal">保存</button>
                         <button type="button" onclick="toggleEdit('username', false)">キャンセル</button>
                     </form>
                 </div>
                 <div class="info-item" id="email-row">
                     <span>メールアドレス:</span>
                     <span id="email-display">{{ user.email }}</span>
-                    <button calss="button-nomal" onclick="toggleEdit('email')">編集</button>
+                    <button class="button-nomal" onclick="toggleEdit('email')">編集</button>
                     <form id="email-form" method="POST" style="display: none;">
                         {% csrf_token %}
                         <input type="email" name="email" value="{{ user.email }}">
-                        <button type="submit" calss="button-nomal">保存</button>
+                        <button type="submit" class="button-nomal">保存</button>
                         <button type="button" onclick="toggleEdit('email', false)">キャンセル</button>
                     </form>
                 </div>
                 <div class="info-item" id="address-row">
                     <span>配送先住所:</span>
                     <span id="address-display">{{ user.address }}</span>
-                    <button calss="button-nomal" onclick="toggleEdit('address')">編集</button>
+                    <button class="button-nomal" onclick="toggleEdit('address')">編集</button>
                     <form id="address-form" method="POST" style="display: none;">
                         {% csrf_token %}
                         <input type="text" name="address" value="{{ user.address }}">
-                        <button type="submit" calss="button-nomal">保存</button>
+                        <button type="submit" class="button-nomal">保存</button>
                         <button type="button" onclick="toggleEdit('address', false)">キャンセル</button>
                     </form>
                 </div>
                 <div class="info-item" id="phone-row">
                     <span>電話番号:</span>
                     <span id="phone-display">{{ user.phone_number }}</span>
-                    <button class="edit-btn" onclick="toggleEdit('phone')">編集</button>
+                    <button class="button-nomal" onclick="toggleEdit('phone')">編集</button>
                     <form id="phone-form" method="POST" style="display: none;">
                         {% csrf_token %}
                         <input type="tel" name="phone" value="{{ user.phone_number }}">
-                        <button type="submit" calss="button-nomal">保存</button>
+                        <button type="submit" class="button-nomal">保存</button>
                         <button type="button" onclick="toggleEdit('phone', false)">キャンセル</button>
                     </form>
                 </div>
@@ -71,8 +71,8 @@
             <input type="hidden" name="field" id="field-name">
             <label id="field-label"></label>
             <input type="text" name="value" id="field-value">
-            <button type="submit" calss="button-nomal">保存</button>
-            <button type="button" calss="button-nomal" onclick="toggleEdit()">キャンセル</button>
+            <button type="submit" class="button-nomal">保存</button>
+            <button type="button" class="button-nomal" onclick="toggleEdit()">キャンセル</button>
         </form>
     </main>
 
