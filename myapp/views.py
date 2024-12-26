@@ -15,7 +15,7 @@ User = get_user_model()
 def main_page(request):
     registration_success = request.session.pop('registration_success', False)
     return render(request, 'main.html', {
-        'registration_success': registration_success
+        'registration_success': registration_success,
     })
 
     # セッションにシークレットキーを一時保存
@@ -94,8 +94,11 @@ def verify_qr(request):
             user = User.objects.create_user(username=username, password=password)
             login(request, user)
 
-            # セッションデータをクリア
-            request.session.flush()
+            # `registration_success` をセッションに保存
+            request.session['registration_success'] = True
+
+            # セッションデータの一部を残す
+            request.session['username'] = username  # 必要に応じて保持する
             return redirect('main')  # メイン画面にリダイレクト
 
         else:
@@ -104,6 +107,7 @@ def verify_qr(request):
             })
 
     return redirect('register')
+
 
 
 @login_required
