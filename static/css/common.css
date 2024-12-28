@@ -22,18 +22,40 @@
 
 /* ヘッダーのスタイル */
 header {
-    background-color: #f8f9fa; /* 薄いグレー */
-    padding: 18px 20px; /* 余白 */
+    background-color: #f8f9fa;
+    padding: 18px 20px;
     display: flex;
-    justify-content: space-between; /* 左右にコンテンツ配置 */
-    border-bottom: 2px solid #007BFF; /* ボーダーライン */
+    justify-content: space-between;
+    border-bottom: 2px solid #007BFF;
+    position: fixed; /* 固定ヘッダー */
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1000; /* ヘッダーが他の要素に隠れないようにする */
 }
 
-/* 商品一覧 */
-main {
-    margin: 20px auto;
-    max-width: 1000px;
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f8f8f8;
+    margin: 0;
+    padding: 0;
+    height: 100vh; /* ビューポート全体の高さ */
+    display: flex;
+    flex-direction: column; /* 縦に配置 */
+    margin-top: 80px; /* ヘッダーの高さを避ける */
+}
 
+main {
+    margin: auto; /* 上下左右中央揃え */
+    width: 100%; /* 横幅を最大に広げる */
+    max-width: 400px; /* フォームの最大幅を制限 */
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 子要素を中央揃え */
 }
 
 .search-bar input {
@@ -84,12 +106,6 @@ header nav button, header nav a {
     font-size: 0.8rem;
 }
 
-
-body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
-}
-
 /* メニュー */
 .menu {
     display: flex;
@@ -113,7 +129,6 @@ body {
 }
 
 .list-contents {
-    display: flex;
     flex-direction: column; /* 縦方向に並べる */
     width: 50%;
     padding: 10px;

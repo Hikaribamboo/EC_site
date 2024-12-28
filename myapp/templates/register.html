@@ -11,30 +11,34 @@
     <!-- 共通ヘッダーを挿入 -->
     {% include 'includes/header.html' %}
 
-    <h1>新規登録</h1>
+    <main>
+        <h1>新規登録</h1>
 
-    {% if qr_code_url %}
-        <p>以下のQRコードを認証アプリで読み取ってください。</p>
-        <img src="{{ qr_code_url }}" alt="QR Code"><br>
-        <form method="post" action="{% url 'verify_qr' %}">
-            {% csrf_token %}
-            <label for="otp">認証コードを入力:</label>
-            <input type="text" name="otp" required>
-            <button type="submit" calss="button-nomal">認証</button>
-            {% if error %}
-                <p style="color: red;">{{ error }}</p>
-            {% endif %}
-        </form>
-    {% else %}
-        <form method="post" action="{% url 'register' %}">
-            {% csrf_token %}
-            <label for="username">ユーザー名:</label>
-            <input type="text" name="username" required><br>
-            <label for="password">パスワード:</label>
-            <input type="password" name="password" required><br>
-            <button type="submit" calss="button-nomal">QRコード生成</button>
-        </form>
-    {% endif %}
+        {% if qr_code_url %}
+            <p>以下のQRコードを認証アプリで読み取ってください。</p>
+            <img src="{{ qr_code_url }}" alt="QR Code"><br>
+            <form method="post" action="{% url 'verify_qr' %}">
+                {% csrf_token %}
+                <label for="otp">認証コードを入力:</label>
+                <input type="text" name="otp" required>
+                <button type="submit" calss="button-nomal">認証</button>
+                {% if error %}
+                    <p style="color: red;">{{ error }}</p>
+                {% endif %}
+            </form>
+        {% else %}
+            <div class="list-contents">
+                <form method="post" action="{% url 'register' %}">
+                    {% csrf_token %}
+                    <label for="username">ユーザー名:</label>
+                    <input type="text" name="username" required><br>
+                    <label for="password">パスワード:</label>
+                    <input type="password" name="password" required><br>
+                    <button type="submit" class="button-nomal">QRコード生成</button>
+                </form>
+            </div>
+        {% endif %}
+    </main>
 </body>
 </html>
 
